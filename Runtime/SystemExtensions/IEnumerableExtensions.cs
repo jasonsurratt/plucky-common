@@ -17,5 +17,11 @@ namespace Plucky.Common
                     return coll.ElementAt(rng.Next() % coll.Count());
             }
         }
+
+        public static IList<T> RandSort<T>(this IEnumerable<T> coll)
+        {
+            var list = coll.ToList();
+            return Randomize.List(list);
+        }
     }
 }
