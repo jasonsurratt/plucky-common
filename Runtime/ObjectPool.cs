@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Reflection;
@@ -10,7 +10,7 @@ namespace Plucky.Common
     public class RefCounter<T> where T : class, new()
     {
         public int count = 0;
-        T reference = null;
+        readonly T reference = null;
 
         public RefCounter(T r)
         {
@@ -50,9 +50,9 @@ namespace Plucky.Common
 
     public class ObjectPool<T> where T : class
     {
-        private ConcurrentBag<T> _objects = new ConcurrentBag<T>();
-        private Action<T> _objectDestroyer;
-        private Func<T> _objectGenerator;
+        private readonly ConcurrentBag<T> _objects = new ConcurrentBag<T>();
+        private readonly Action<T> _objectDestroyer;
+        private readonly Func<T> _objectGenerator;
         public int allocateChunks = 0;
         public int maxItems = -1;
 
@@ -95,7 +95,9 @@ namespace Plucky.Common
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#pragma warning disable IDE0051 // Remove unused private members
         static void Init()
+#pragma warning restore IDE0051 // Remove unused private members
         {
             _instance = null;
         }
@@ -113,8 +115,7 @@ namespace Plucky.Common
 
         public T Get()
         {
-            T item;
-            if (_objects.TryTake(out item))
+            if (_objects.TryTake(out T item))
             {
                 return item;
             }

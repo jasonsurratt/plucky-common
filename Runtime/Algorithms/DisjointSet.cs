@@ -17,7 +17,7 @@ namespace Plucky.Common
             public int size;
         }
 
-        Element[] elements;
+        readonly Element[] elements;
 
         public DisjointSet(int size)
         {

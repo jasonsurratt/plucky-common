@@ -26,7 +26,6 @@ namespace Plucky.Common
         public int populationSize = 3;
 
         ObjectPool<Sample> pool;
-        List<Sample> population = new List<Sample>();
 
         void CreateNewCandidate(Sample from, Sample to, float sd)
         {
