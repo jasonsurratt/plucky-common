@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -13,13 +13,13 @@ namespace Plucky.Common
     public class LruCache<K, V> : IEnumerable<KeyValuePair<K, V>>
     {
         public int capacity;
-        private Dictionary<K, LinkedListNode<LRUCacheItem<K, V>>> cacheMap = new Dictionary<K, LinkedListNode<LRUCacheItem<K, V>>>();
+        private readonly Dictionary<K, LinkedListNode<LRUCacheItem<K, V>>> cacheMap = new Dictionary<K, LinkedListNode<LRUCacheItem<K, V>>>();
 
         public Action<K, V> evictionCallback = null;
 
-        private LinkedList<LRUCacheItem<K, V>> lruList = new LinkedList<LRUCacheItem<K, V>>();
+        private readonly LinkedList<LRUCacheItem<K, V>> lruList = new LinkedList<LRUCacheItem<K, V>>();
 
-        ObjectPool<LinkedListNode<LRUCacheItem<K, V>>> llNodePool;
+        readonly ObjectPool<LinkedListNode<LRUCacheItem<K, V>>> llNodePool;
 
         public LruCache(int capacity)
         {
@@ -34,8 +34,10 @@ namespace Plucky.Common
                     return node;
                 },
                 delegate (LinkedListNode<LRUCacheItem<K, V>> item) { }
-            );
-            llNodePool.maxItems = Math.Max(50, capacity + 1);
+            )
+            {
+                maxItems = Math.Max(50, capacity + 1)
+            };
         }
 
         public bool Evict(K key)
@@ -58,8 +60,7 @@ namespace Plucky.Common
         [MethodImpl(MethodImplOptions.Synchronized)]
         public V Get(K key)
         {
-            LinkedListNode<LRUCacheItem<K, V>> node;
-            if (cacheMap.TryGetValue(key, out node))
+            if (cacheMap.TryGetValue(key, out LinkedListNode<LRUCacheItem<K, V>> node))
             {
                 V value = node.Value.value;
                 lruList.Remove(node);
