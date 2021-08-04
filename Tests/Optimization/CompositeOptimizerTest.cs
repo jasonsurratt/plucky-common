@@ -16,10 +16,12 @@ namespace Plucky.Common
             pass1.SetMinimumStepSize(50, 20, .005f);
             uut.pass1 = pass1;
 
-            var pass2 = new NelderMead();
-            pass2.guessSpread = 0.1f;
-            pass2.convergenceAbsolute = 0.005f;
-            pass2.maxIterations = 1000;
+            var pass2 = new NelderMead
+            {
+                guessSpread = 0.1f,
+                convergenceAbsolute = 0.005f,
+                maxIterations = 1000
+            };
             uut.pass2 = pass2;
 
 
