@@ -1,9 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Plucky.Common
 {
+    public interface IRng
+    {
+        IRng NewRng();
+
+        double NextDouble();
+
+        float NextFloat();
+
+        int NextInt();
+
+        float Range(float min, float max);
+
+        int Range(int min, int max);
+
+        void Reset();
+    }
+
+    public class SystemRng : IRng
+    {
+        System.Random rng;
+        int seed;
+
+        public SystemRng(int seed)
+        {
+            this.seed = seed;
+            Reset();
+        }
+
+        public IRng NewRng() => new SystemRng(NextInt());
+
+        public double NextDouble() => rng.NextDouble();
+
+        public float NextFloat() => (float)rng.NextDouble();
+
+        public int NextInt() => rng.Next();
+
+        public float Range(float min, float max) => Mathf.Lerp(min, max, NextFloat());
+
+        public int Range(int min, int max) => NextInt() % (max - min) + min;
+
+        public void Reset() { rng = new System.Random(seed); }
+    }
+
     public class Randomize
     {
         public static System.Random rng = new System.Random();
@@ -89,15 +133,23 @@ namespace Plucky.Common
         /// </summary>
         public static int PickIndex(System.Random rng, IList<float> weights)
         {
+            return PickIndex(new SystemRng(rng.Next()), weights);
+        }
+
+        /// <summary>
+        /// PickIndex returns a random weighted index.
+        /// </summary>
+        public static int PickIndex(IRng rng, IList<float> weights)
+        {
             float sum = weights.Sum();
 
             // if there are no weights, return a random index
             if (sum == 0)
             {
-                return rng.Next() % weights.Count;
+                return rng.NextInt() % weights.Count;
             }
 
-            float pick = (float)rng.NextDouble() * sum;
+            float pick = rng.NextFloat() * sum;
             float runSum = 0;
             for (int i = 0; i < weights.Count; i++)
             {

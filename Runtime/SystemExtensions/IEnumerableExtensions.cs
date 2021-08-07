@@ -7,6 +7,11 @@ namespace Plucky.Common
     {
         public static System.Random rng = new System.Random();
 
+        public static IEnumerable<T> PickN<T>(this IEnumerable<T> coll, int n)
+        {
+            return coll.RandSort().Take(n);
+        }
+
         public static T PickOne<T>(this IEnumerable<T> coll)
         {
             switch (coll)
