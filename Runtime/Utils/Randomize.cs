@@ -82,24 +82,24 @@ namespace Plucky.Common
             result.AddRange(tmp);
         }
 
-        public static int PickIndex(float[] weights) => PickIndex(rng, weights);
+        public static int PickIndex(IList<float> weights) => PickIndex(rng, weights);
 
         /// <summary>
         /// PickIndex returns a random weighted index.
         /// </summary>
-        public static int PickIndex(System.Random rng, float[] weights)
+        public static int PickIndex(System.Random rng, IList<float> weights)
         {
             float sum = weights.Sum();
 
             // if there are no weights, return a random index
             if (sum == 0)
             {
-                return rng.Next() % weights.Length;
+                return rng.Next() % weights.Count;
             }
 
             float pick = (float)rng.NextDouble() * sum;
             float runSum = 0;
-            for (int i = 0; i < weights.Length; i++)
+            for (int i = 0; i < weights.Count; i++)
             {
                 runSum += weights[i];
                 if (pick <= runSum)
@@ -107,7 +107,7 @@ namespace Plucky.Common
                     return i;
                 }
             }
-            return weights.Length - 1;
+            return weights.Count - 1;
         }
     }
 }
