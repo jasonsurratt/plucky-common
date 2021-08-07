@@ -29,12 +29,14 @@ namespace Plucky.Common
         {
             callCount = 0;
             float[] result = new float[2];
-            NelderMead uut = new NelderMead();
-            uut.convergenceDiff = 1e-2f;
-            uut.guessSpread = 5;
-            uut.maxIterations = 1000;
-            uut.sigma = 0.75f;
-            uut.gamma = 2;
+            NelderMead uut = new NelderMead
+            {
+                convergenceDiff = 1e-2f,
+                guessSpread = 5,
+                maxIterations = 1000,
+                sigma = 0.75f,
+                gamma = 2
+            };
             result = uut.Optimize(Parabola, new float[] { 20, 10 });
             Debug.Log($"Call Count: {callCount} Solution: {result[0]}, {result[1]} ({Parabola(result)})");
 
