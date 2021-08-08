@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Plucky.Common
 {
-    public class SmoothRng : IRng
+    public class SmoothRng : AbstractRng
     {
         public float seed = 0;
         public float offset;
@@ -17,40 +17,22 @@ namespace Plucky.Common
             Reset();
         }
 
-        public IRng NewRng()
+        public override IRng NewRng()
         {
             return new SmoothRng(Range(0, 100), offset);
         }
 
-        public float NextFloat()
+        public override float NextFloat()
         {
             float result = Mathf.Clamp01(Mathf.PerlinNoise(point.x + offset, point.y));
             point += sampleDelta;
             return result;
         }
 
-        public double NextDouble()
-        {
-            // hmm, is this legit? I'm kind tired.
-            return ((NextFloat() * 1e7) + NextFloat()) / 1e7;
-        }
-
-        public int NextInt()
-        {
-            return (int)(NextDouble() * (double)int.MaxValue);
-        }
-
-        public float Range(float min, float max)
-        {
-            return Mathf.Lerp(min, max, NextFloat());
-        }
-
-        public int Range(int min, int max) => NextInt() % (max - min) + min;
-
         /// <summary>
         /// Reset the RNG to the state with the specified seed/offset
         /// </summary>
-        public void Reset()
+        public override void Reset()
         {
             point = new Vector2((seed * 1.3215842f) % 100, (seed * 0.8235121f) % 100);
         }

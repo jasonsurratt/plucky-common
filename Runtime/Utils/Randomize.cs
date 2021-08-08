@@ -15,6 +15,8 @@ namespace Plucky.Common
 
         int NextInt();
 
+        Vector2 UnitCircle();
+
         float Range(float min, float max);
 
         int Range(int min, int max);
@@ -22,7 +24,7 @@ namespace Plucky.Common
         void Reset();
     }
 
-    public class SystemRng : IRng
+    public class SystemRng : AbstractRng
     {
         System.Random rng;
         int seed;
@@ -33,19 +35,15 @@ namespace Plucky.Common
             Reset();
         }
 
-        public IRng NewRng() => new SystemRng(NextInt());
+        public override IRng NewRng() => new SystemRng(NextInt());
 
-        public double NextDouble() => rng.NextDouble();
+        public override double NextDouble() => rng.NextDouble();
 
-        public float NextFloat() => (float)rng.NextDouble();
+        public override float NextFloat() => (float)rng.NextDouble();
 
-        public int NextInt() => rng.Next();
+        public override int NextInt() => rng.Next();
 
-        public float Range(float min, float max) => Mathf.Lerp(min, max, NextFloat());
-
-        public int Range(int min, int max) => NextInt() % (max - min) + min;
-
-        public void Reset() { rng = new System.Random(seed); }
+        public override void Reset() { rng = new System.Random(seed); }
     }
 
     public class Randomize
@@ -63,6 +61,20 @@ namespace Plucky.Common
         public static IList<T> List<T>(IList<T> arr)
         {
             return List(rng, arr);
+        }
+
+        public static IList<T> List<T>(IRng rng, IList<T> arr)
+        {
+            for (int j = 0; j < arr.Count; j++)
+            {
+                int s1 = rng.NextInt() % arr.Count;
+                int s2 = rng.NextInt() % arr.Count;
+                T tmp = arr[s1];
+                arr[s1] = arr[s2];
+                arr[s2] = tmp;
+            }
+
+            return arr;
         }
 
         public static IList<T> List<T>(System.Random rn, IList<T> arr)
