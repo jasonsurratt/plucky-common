@@ -9,10 +9,12 @@ namespace Plucky.Common
         {
             CompositeOptimizer uut = new CompositeOptimizer();
 
-            var pass1 = new PseudoSimulatedAnnealing();
-            pass1.populationSize = 5;
-            pass1.candidatesPerIteration = 2;
-            pass1.convergenceAbsolute = 10f;
+            var pass1 = new PseudoSimulatedAnnealing
+            {
+                populationSize = 5,
+                candidatesPerIteration = 2,
+                convergenceAbsolute = 10f
+            };
             pass1.SetMinimumStepSize(50, 20, .005f);
             uut.pass1 = pass1;
 
