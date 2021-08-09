@@ -26,6 +26,8 @@ namespace Plucky.Common
 
     public class SystemRng : AbstractRng
     {
+        public readonly static SystemRng sys = new SystemRng(0);
+
         System.Random rng;
         int seed;
 

@@ -11,7 +11,7 @@ namespace Plucky.Common
         public virtual double NextDouble()
         {
             // hmm, is this legit? I'm kind tired.
-            return ((NextFloat() * 1e7) + NextFloat()) / 1e7;
+            return ((NextFloat() * 1e7) + NextFloat()) / (1e7 + 1);
         }
 
         public abstract float NextFloat();
