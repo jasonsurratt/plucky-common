@@ -7,6 +7,16 @@ namespace Plucky.Common
     {
         public static System.Random rng = new System.Random();
 
+        public static IEnumerable<T> PickN<T>(this IEnumerable<T> coll, IRng rng, int n)
+        {
+            return coll.RandSort(rng).Take(n);
+        }
+
+        public static IEnumerable<T> PickN<T>(this IEnumerable<T> coll, int n)
+        {
+            return coll.RandSort().Take(n);
+        }
+
         public static T PickOne<T>(this IEnumerable<T> coll)
         {
             switch (coll)
@@ -22,6 +32,12 @@ namespace Plucky.Common
         {
             var list = coll.ToList();
             return Randomize.List(list);
+        }
+
+        public static IList<T> RandSort<T>(this IEnumerable<T> coll, IRng rng)
+        {
+            var list = coll.ToList();
+            return Randomize.List(rng, list);
         }
     }
 }

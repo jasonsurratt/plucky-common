@@ -1,9 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Plucky.Common
 {
+    public interface IRng
+    {
+        IRng NewRng();
+
+        double NextDouble();
+
+        float NextFloat();
+
+        int NextInt();
+
+        Vector2 UnitCircle();
+
+        float Range(float min, float max);
+
+        int Range(int min, int max);
+
+        void Reset();
+    }
+
+    public class SystemRng : AbstractRng
+    {
+        public readonly static SystemRng sys = new SystemRng(0);
+
+        System.Random rng;
+        int seed;
+
+        public SystemRng(int seed)
+        {
+            this.seed = seed;
+            Reset();
+        }
+
+        public override IRng NewRng() => new SystemRng(NextInt());
+
+        public override double NextDouble() => rng.NextDouble();
+
+        public override float NextFloat() => (float)rng.NextDouble();
+
+        public override int NextInt() => rng.Next();
+
+        public override void Reset() { rng = new System.Random(seed); }
+    }
+
     public class Randomize
     {
         public static System.Random rng = new System.Random();
@@ -19,6 +63,20 @@ namespace Plucky.Common
         public static IList<T> List<T>(IList<T> arr)
         {
             return List(rng, arr);
+        }
+
+        public static IList<T> List<T>(IRng rng, IList<T> arr)
+        {
+            for (int j = 0; j < arr.Count; j++)
+            {
+                int s1 = rng.NextInt() % arr.Count;
+                int s2 = rng.NextInt() % arr.Count;
+                T tmp = arr[s1];
+                arr[s1] = arr[s2];
+                arr[s2] = tmp;
+            }
+
+            return arr;
         }
 
         public static IList<T> List<T>(System.Random rn, IList<T> arr)
@@ -82,24 +140,32 @@ namespace Plucky.Common
             result.AddRange(tmp);
         }
 
-        public static int PickIndex(float[] weights) => PickIndex(rng, weights);
+        public static int PickIndex(IList<float> weights) => PickIndex(rng, weights);
 
         /// <summary>
         /// PickIndex returns a random weighted index.
         /// </summary>
-        public static int PickIndex(System.Random rng, float[] weights)
+        public static int PickIndex(System.Random rng, IList<float> weights)
+        {
+            return PickIndex(new SystemRng(rng.Next()), weights);
+        }
+
+        /// <summary>
+        /// PickIndex returns a random weighted index.
+        /// </summary>
+        public static int PickIndex(IRng rng, IList<float> weights)
         {
             float sum = weights.Sum();
 
             // if there are no weights, return a random index
             if (sum == 0)
             {
-                return rng.Next() % weights.Length;
+                return rng.NextInt() % weights.Count;
             }
 
-            float pick = (float)rng.NextDouble() * sum;
+            float pick = rng.NextFloat() * sum;
             float runSum = 0;
-            for (int i = 0; i < weights.Length; i++)
+            for (int i = 0; i < weights.Count; i++)
             {
                 runSum += weights[i];
                 if (pick <= runSum)
@@ -107,7 +173,7 @@ namespace Plucky.Common
                     return i;
                 }
             }
-            return weights.Length - 1;
+            return weights.Count - 1;
         }
     }
 }
