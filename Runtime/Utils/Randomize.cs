@@ -15,6 +15,7 @@ namespace Plucky.Common
 
         int NextInt();
 
+        /// UnitCircle returns a 2D value within a circle with radius 1.
         Vector2 UnitCircle();
 
         float Range(float min, float max);
@@ -168,7 +169,7 @@ namespace Plucky.Common
             for (int i = 0; i < weights.Count; i++)
             {
                 runSum += weights[i];
-                if (pick <= runSum)
+                if (pick <= runSum && runSum > 0)
                 {
                     return i;
                 }
