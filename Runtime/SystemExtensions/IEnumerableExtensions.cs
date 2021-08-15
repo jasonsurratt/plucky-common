@@ -17,15 +17,20 @@ namespace Plucky.Common
             return coll.RandSort().Take(n);
         }
 
-        public static T PickOne<T>(this IEnumerable<T> coll)
+        public static T PickOne<T>(this IEnumerable<T> coll, IRng rng)
         {
             switch (coll)
             {
                 case IList<T> list:
-                    return list[rng.Next() % list.Count];
+                    return list[rng.NextInt() % list.Count];
                 default:
-                    return coll.ElementAt(rng.Next() % coll.Count());
+                    return coll.ElementAt(rng.NextInt() % coll.Count());
             }
+        }
+
+        public static T PickOne<T>(this IEnumerable<T> coll)
+        {
+            return coll.PickOne<T>(new SystemRng(rng.Next()));
         }
 
         public static IList<T> RandSort<T>(this IEnumerable<T> coll)
