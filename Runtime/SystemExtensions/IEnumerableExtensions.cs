@@ -44,5 +44,27 @@ namespace Plucky.Common
             var list = coll.ToList();
             return Randomize.List(rng, list);
         }
+
+        public static T[] Sample<T>(this IEnumerable<T> coll, int n, IRng rng)
+        {
+            T[] result = new T[n];
+            for (int i = 0; i < n; i++)
+            {
+                result[i] = coll.PickOne();
+            }
+            return result;
+        }
+
+        public static T[] Sample<T>(this IEnumerable<T> coll, int n, float[] weights, IRng rng = null)
+        {
+            if (rng == null) rng = SystemRng.sys;
+            T[] result = new T[n];
+            for (int i = 0; i < n; i++)
+            {
+                int index = Randomize.PickIndex(rng, weights);
+                result[i] = coll.ElementAt(index);
+            }
+            return result;
+        }
     }
 }
