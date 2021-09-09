@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace Plucky.Common
 {
@@ -75,6 +76,27 @@ namespace Plucky.Common
             set { type = typeof(short); _shortValue = value; }
         }
 
+        [FieldOffset(0)] Vector3 _vector3Value;
+        public Vector3 vector3Value
+        {
+            get
+            {
+                if (type == typeof(string))
+                {
+                    var splits = _stringValue.Split(',');
+                    if (splits.Length != 3) throw new ArgumentException("vetor3 must have 3 values");
+                    Vector3 result = new Vector3();
+                    result.x = Convert.ToSingle(splits[0]);
+                    result.y = Convert.ToSingle(splits[1]);
+                    result.z = Convert.ToSingle(splits[2]);
+                    return result;
+                }
+                else if (type == typeof(Vector3)) return _vector3Value;
+                throw new ArgumentException();
+            }
+            set { type = typeof(Vector3); _vector3Value = value; }
+        }
+
         public static implicit operator Variant(float v)
         {
             var result = new Variant();
@@ -96,5 +118,11 @@ namespace Plucky.Common
             return result;
         }
 
+        public static implicit operator Variant(Vector3 v)
+        {
+            var result = new Variant();
+            result.vector3Value = v;
+            return result;
+        }
     }
 }
