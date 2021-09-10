@@ -38,7 +38,10 @@ namespace Plucky.Common
 
         public Vector3 GetVector3(Key key, Vector3 defaultValue)
         {
-            if (entries.ContainsKey(key)) return entries[key].vector3Value;
+            if (entries.ContainsKey(key))
+            {
+                return entries[key].vector3Value;
+            }
 
             return defaultValue;
         }
