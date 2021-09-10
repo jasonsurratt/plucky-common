@@ -13,19 +13,23 @@ namespace Plucky.Common
         Float,
     }
 
-    [StructLayout(LayoutKind.Explicit)]
+    /// <summary>
+    /// Initially I tried setting the location explicitly, but that caused errors with Vector3.
+    /// This probably caused problems because Vector3 is some kinda of weird native type.
+    /// </summary>
     public struct Variant
     {
-
-        [FieldOffset(8)] Type type;
+        Type type;
         //[FieldOffset(0)] public object objectValue;
 
-        [FieldOffset(0)] float _floatValue;
+        object _value;
+
+        float _floatValue;
         public float floatValue
         {
             get
             {
-                if (type == typeof(string)) return Convert.ToInt32(_stringValue);
+                if (type == typeof(string)) return Convert.ToSingle(_value);
                 else if (type == typeof(float)) return _floatValue;
                 else if (type == typeof(int)) return Convert.ToSingle(_intValue);
                 else if (type == typeof(short)) return Convert.ToSingle(_shortValue);
@@ -34,12 +38,12 @@ namespace Plucky.Common
             set { type = typeof(int); _floatValue = value; }
         }
 
-        [FieldOffset(0)] int _intValue;
+        int _intValue;
         public int intValue
         {
             get
             {
-                if (type == typeof(string)) return Convert.ToInt32(_stringValue);
+                if (type == typeof(string)) return Convert.ToInt32(_value);
                 else if (type == typeof(float)) return Convert.ToInt32(_floatValue);
                 else if (type == typeof(int)) return _intValue;
                 else if (type == typeof(short)) return _shortValue;
@@ -48,26 +52,25 @@ namespace Plucky.Common
             set { type = typeof(int); _intValue = value; }
         }
 
-        [FieldOffset(0)] string _stringValue;
         public string stringValue
         {
             get
             {
-                if (type == typeof(string)) return _stringValue;
+                if (type == typeof(string)) return Convert.ToString(_value);
                 else if (type == typeof(float)) return Convert.ToString(_floatValue);
                 else if (type == typeof(int)) return Convert.ToString(_intValue);
                 else if (type == typeof(short)) return Convert.ToString(_shortValue);
                 throw new ArgumentException();
             }
-            set { type = typeof(string); _stringValue = value; }
+            set { type = typeof(string); _value = value; }
         }
 
-        [FieldOffset(0)] short _shortValue;
+        short _shortValue;
         public short shortValue
         {
             get
             {
-                if (type == typeof(string)) return Convert.ToInt16(_stringValue);
+                if (type == typeof(string)) return Convert.ToInt16(_value);
                 else if (type == typeof(float)) return Convert.ToInt16(_floatValue);
                 else if (type == typeof(int)) return Convert.ToInt16(_intValue);
                 else if (type == typeof(short)) return _shortValue;
@@ -76,14 +79,14 @@ namespace Plucky.Common
             set { type = typeof(short); _shortValue = value; }
         }
 
-        [FieldOffset(0)] Vector3 _vector3Value;
+        Vector3 _vector3Value;
         public Vector3 vector3Value
         {
             get
             {
                 if (type == typeof(string))
                 {
-                    var splits = _stringValue.Split(',');
+                    var splits = Convert.ToString(_value).Split(',');
                     if (splits.Length != 3) throw new ArgumentException("vetor3 must have 3 values");
                     Vector3 result = new Vector3();
                     result.x = Convert.ToSingle(splits[0]);
