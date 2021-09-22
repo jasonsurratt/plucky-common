@@ -33,6 +33,15 @@ namespace Plucky.Common
             return coll.PickOne<T>(new SystemRng(rng.Next()));
         }
 
+        public static T PickOneOrDefault<T>(this IEnumerable<T> coll)
+        {
+            if (coll.Count() == 0)
+            {
+                return coll.FirstOrDefault();
+            }
+            return coll.PickOne<T>(new SystemRng(rng.Next()));
+        }
+
         public static IList<T> RandSort<T>(this IEnumerable<T> coll)
         {
             var list = coll.ToList();
