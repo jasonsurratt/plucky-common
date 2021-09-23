@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,7 +27,15 @@ namespace Plucky.Common
 
         public float GetFloat(Key key, float defaultValue)
         {
-            if (entries.ContainsKey(key)) return entries[key].floatValue;
+            try
+            {
+                if (entries.ContainsKey(key)) return entries[key].floatValue;
+            }
+            catch (FormatException ex)
+            {
+                Debug.LogWarning($"Failure parsing: {entries[key]}, {ex.Message}");
+                // ignore and return default.
+            }
             return defaultValue;
         }
 

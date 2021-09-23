@@ -9,7 +9,13 @@ namespace Plucky.Common
 {
     public class SmoothRng : AbstractRng
     {
-        public float seed = 0;
+        public float seed
+        {
+            get => _seed;
+            set { _seed = value; Reset(); }
+        }
+        float _seed = 0;
+        
         public float offset;
         static float[] perlinThresholds = new float[] {
             -0.07091679f, 0.003814215f, 0.0253427f, 0.04014447f, 0.0519441f,
