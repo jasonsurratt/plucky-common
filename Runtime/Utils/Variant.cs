@@ -127,5 +127,10 @@ namespace Plucky.Common
             result.vector3Value = v;
             return result;
         }
+
+        public override string ToString()
+        {
+            return stringValue;
+        }
     }
 }

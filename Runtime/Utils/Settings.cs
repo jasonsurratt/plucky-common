@@ -33,7 +33,7 @@ namespace Plucky.Common
             }
             catch (FormatException ex)
             {
-                Debug.LogWarning($"Failure parsing: {entries[key]}, {ex.Message}");
+                Debug.LogWarning($"Failure parsing: {key}, {entries[key]}, {ex.Message}");
                 // ignore and return default.
             }
             return defaultValue;
