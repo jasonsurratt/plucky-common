@@ -151,6 +151,12 @@ namespace Plucky.Common
             return PickIndex(new SystemRng(rng.Next()), weights);
         }
 
+        public class PickIndexCache
+        {
+            public float sum = -1;
+            public float[] assendingWeights;
+        }
+
         /// <summary>
         /// PickIndex returns a random weighted index.
         /// </summary>
@@ -175,6 +181,38 @@ namespace Plucky.Common
                 }
             }
             return weights.Count - 1;
+        }
+
+        /// <summary>
+        /// PickIndex returns a random weighted index.
+        /// </summary>
+        public static int PickIndex(IRng rng, IList<float> weights, PickIndexCache cache)
+        {
+            if (cache.sum < 0)
+            {
+                float sum = 0;
+                cache.assendingWeights = new float[weights.Count()];
+                for (int i = 0; i < weights.Count(); i++)
+                {
+                    sum += weights[i];
+                    cache.assendingWeights[i] = sum;
+                }
+                cache.sum = sum;
+            }
+
+            // if there are no weights, return a random index
+            if (cache.sum == 0)
+            {
+                return rng.NextInt() % weights.Count;
+            }
+
+            float pick = rng.NextFloat() * cache.sum;
+            int index = Array.BinarySearch(cache.assendingWeights, pick);
+            if (index < 0)
+            {
+                index = ~index;
+            }
+            return Math.Min(index, weights.Count - 1);
         }
     }
 }

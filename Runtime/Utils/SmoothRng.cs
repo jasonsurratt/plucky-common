@@ -309,7 +309,7 @@ namespace Plucky.Common
             }
 
             Assert.IsTrue(result >= 0);
-            Assert.IsTrue(result <= 1, $"result is: {result}, index: {index}");
+            Assert.IsTrue(result <= 1);
 
             return result;
         }
