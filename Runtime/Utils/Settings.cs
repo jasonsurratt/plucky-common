@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,6 +21,15 @@ namespace Plucky.Common
             get { return entries[key]; }
             set { entries[key] = value; }
         }
+
+        public Settings<Key> Clone()
+        {
+            var result = new Settings<Key>();
+            result.entries = entries.ToDictionary(entry => entry.Key, entry => entry.Value);
+            return result;
+        }
+
+        public bool Contains(Key key) => entries.ContainsKey(key);
 
         public Variant Get(Key key) => entries[key];
 
@@ -54,5 +64,7 @@ namespace Plucky.Common
 
             return defaultValue;
         }
+
+        public void Remove(Key key) => entries.Remove(key);
     }
 }

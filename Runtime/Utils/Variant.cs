@@ -35,7 +35,7 @@ namespace Plucky.Common
                 else if (type == typeof(short)) return Convert.ToSingle(_shortValue);
                 throw new ArgumentException();
             }
-            set { type = typeof(int); _floatValue = value; }
+            set { type = typeof(float); _floatValue = value; }
         }
 
         int _intValue;
