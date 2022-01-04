@@ -56,7 +56,7 @@ namespace Plucky.Common
         public int allocateChunks = 0;
         public int maxItems = -1;
 
-        private static ObjectPool<T> _instance;
+        private static ObjectPool<T> _instance = null;
         public static ObjectPool<T> instance
         {
             get
@@ -94,13 +94,14 @@ namespace Plucky.Common
             _objectGenerator = objectGenerator;
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-#pragma warning disable IDE0051 // Remove unused private members
-        static void Init()
-#pragma warning restore IDE0051 // Remove unused private members
-        {
-            _instance = null;
-        }
+        // this causes an error in unity 2021
+//        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+//#pragma warning disable IDE0051 // Remove unused private members
+//        static void Init()
+//#pragma warning restore IDE0051 // Remove unused private members
+//        {
+//            _instance = null;
+//        }
 
         public void Clear()
         {
